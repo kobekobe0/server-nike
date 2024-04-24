@@ -1,0 +1,14 @@
+stages:         
+  - deploy
+build-job:      
+  stage: deploy
+  tags:
+    - truesight-runner-dev
+  script:
+    - cd /home/truesight/truesight-webbackend
+    - git config --global --add safe.directory /home/truesight/truesight-webbackend
+    - git stash
+    - git pull
+    - npm install
+    - pm2 restart backend --update-env
+    - pm2 status
