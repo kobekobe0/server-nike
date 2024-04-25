@@ -9,6 +9,7 @@ import productRouter from "./routes/productRouter.js";
 import bodyParser from 'body-parser';
 import multer from "multer";
 import orderRouter from "./routes/orderRouter.js";
+import cartRouter from "./routes/cartRouter.js";
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/client", clientRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/order", orderRouter)
+app.use("/api/v1/cart", cartRouter)
 
 export const io = createSocketServer(app, port);
 

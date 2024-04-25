@@ -1,10 +1,11 @@
 import Cart from "../../models/Cart.js";
 
 export const addCartItem = async (req, res) => {
-    const { client, product, quantity } = req.body;
+    const {client } = req.body;
+    const { product, quantity } = req.body;
     try {
         const newCartItem = await Cart.create({
-            client,
+            client: client.id  ,
             product,
             quantity,
         });
@@ -26,7 +27,7 @@ export const addCartItem = async (req, res) => {
 }
 
 export const removeCartItem = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.query;
     try {
         const cartItem = await Cart.findByIdAndDelete(id);
         if (!cartItem) {
@@ -52,7 +53,7 @@ export const removeCartItem = async (req, res) => {
 }
 
 export const updateCartItem = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.query;
     const { quantity } = req.body;
     try {
         const cartItem = await Cart.findByIdAndUpdate

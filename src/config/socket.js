@@ -6,7 +6,7 @@ const createSocketServer = (app, port) => {
 
   const io = new Server(server, {
     cors: {
-      origin: ["http://157.245.193.50:3000", "http://localhost:3000", "http://dashboard.truesightphotography.com", "http://stg-dashboard.truesightphotography.com"],
+      origin: ["http://157.245.193.50:3000", "http://localhost:3000"],
       methods: ["GET", "POST"],
     },
   });
