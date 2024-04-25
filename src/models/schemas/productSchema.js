@@ -56,6 +56,10 @@ const productSchema = new Schema({
         type: String,
         required: true
     },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    }
 });
 
 export default productSchema;

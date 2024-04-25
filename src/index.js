@@ -5,7 +5,10 @@ import adminRouter from "./routes/adminRouter.js";
 import cors from "cors";
 import createSocketServer from "./config/socket.js";
 import clientRouter from "./routes/clientRouter.js";
-
+import productRouter from "./routes/productRouter.js";
+import bodyParser from 'body-parser';
+import multer from "multer";
+import orderRouter from "./routes/orderRouter.js";
 
 dotenv.config();
 
@@ -16,6 +19,7 @@ const app = express();
 const port = process.env.PORT || 4000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 const corsOptions = {
     origin: [
@@ -31,6 +35,8 @@ app.use(cors(corsOptions));
 
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/client", clientRouter);
+app.use("/api/v1/product", productRouter);
+app.use("/api/v1/order", orderRouter)
 
 export const io = createSocketServer(app, port);
 
