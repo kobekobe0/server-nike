@@ -35,8 +35,8 @@ export const getProductsByQuery = async (req, res) => {
     try {
         let query = { isDeleted: false, isActive: true };
 
-        if (req.query.category) {
-            query.category = req.query.category;
+        if (req.query.type) {
+            query.type = req.query.type;
         }
 
         if (req.query.sex) {
@@ -52,7 +52,17 @@ export const getProductsByQuery = async (req, res) => {
         }
 
         const products = await Product.find(query);
-        res.status(200).json({ data: products });
+
+        const productsWithImages = products.map(product => ({
+            ...product._doc,
+            mainImage: process.env.SERVER_URL + '/' + product.mainImage.replace(/ /g, '%20'),
+            image1: process.env.SERVER_URL + '/' + product.image1.replace(/ /g, '%20'),
+            image2: process.env.SERVER_URL + '/' + product.image2.replace(/ /g, '%20'),
+            image3: process.env.SERVER_URL + '/' + product.image3.replace(/ /g, '%20'),
+            image4: process.env.SERVER_URL + '/' + product.image4.replace(/ /g, '%20'),
+        }));
+        console.log(productsWithImages);
+        res.status(200).json({ data: productsWithImages });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

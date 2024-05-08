@@ -11,6 +11,12 @@ import multer from "multer";
 import orderRouter from "./routes/orderRouter.js";
 import cartRouter from "./routes/cartRouter.js";
 
+import path,  { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 dotenv.config();
 
 // connect to database first
@@ -39,6 +45,8 @@ app.use("/api/v1/client", clientRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/order", orderRouter)
 app.use("/api/v1/cart", cartRouter)
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 export const io = createSocketServer(app, port);
 
