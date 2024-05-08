@@ -48,7 +48,7 @@ export const loginClient = async (req, res) => {
 }
 
 export const signUpClient = async (req, res) => {
-    const { name, username, email, password } = req.body;
+    const { name, username, email, password, phone } = req.body;
     try {
         const admin = await Admin.findOne({ email });
         if (admin) {
@@ -61,6 +61,7 @@ export const signUpClient = async (req, res) => {
             username,
             email,
             password: hashedPassword,
+            phone
         });
 
         const client = await newClient.save();
