@@ -3,6 +3,7 @@ import hashData from "../../helpers/hashData.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { io } from "../../index.js";
+import Admin from "../../models/Admins.js";
 
 
 export const loginClient = async (req, res) => {
@@ -49,6 +50,11 @@ export const loginClient = async (req, res) => {
 export const signUpClient = async (req, res) => {
     const { name, username, email, password } = req.body;
     try {
+        const admin = await Admin.findOne({ email });
+        if (admin) {
+            return res.status(400).json({ error: "Account already exists" });
+        }
+
         const hashedPassword = await hashData(password);
         const newClient = new Client({
             name,

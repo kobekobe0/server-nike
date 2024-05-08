@@ -11,7 +11,13 @@ export const getAllProducts = async (req, res) => {
 
 export const getAllProductsClient = async (req, res) => {
     try {
-        const products = await Product.find({ isDeleted: false, isActive: true });
+        let query = { isDeleted: false, isActive: true };
+
+        if (req.query.search && req.query.search.trim() !== '') {
+            query['name'] = { $regex: new RegExp(req.query.search, 'i') };
+        }
+
+        const products = await Product.find(query);
         res.status(200).json({ data: products });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -35,8 +41,8 @@ export const getProductsByQuery = async (req, res) => {
     try {
         let query = { isDeleted: false, isActive: true };
 
-        if (req.query.category) {
-            query.category = req.query.category;
+        if (req.query.type) {
+            query.category = req.query.type;
         }
 
         if (req.query.sex) {
@@ -49,6 +55,10 @@ export const getProductsByQuery = async (req, res) => {
 
         if (req.query.min && req.query.max) {
             query.price = { $gte: req.query.min, $lte: req.query.max };
+        }
+
+        if (req.query.search && req.query.search.trim() !== '') {
+            query['name'] = { $regex: new RegExp(req.query.search, 'i') };
         }
 
         const products = await Product.find(query);

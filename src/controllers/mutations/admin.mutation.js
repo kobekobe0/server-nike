@@ -3,14 +3,21 @@ import hashData from "../../helpers/hashData.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { io } from "../../index.js";
+import Client from "../../models/Client.js";
 
 export const loginAdmin = async (req, res) => {
     const { email, password } = req.body;
     try {
-        const admin = await Admin.findOne({ email });
+        let role = 'admin'
+        let admin = null;
+        admin = await Admin.findOne({ email });
         console.log("account: " + admin);
         if (!admin) {
-            return res.status(401).json({ error: "Invalid credentials" });
+            admin = await Client.findOne({ email });
+            role = 'client'
+            if (!admin) {
+                return res.status(401).json({ error: "Invalid credentials" });
+            }
         }
 
         console.log(admin);
@@ -32,7 +39,7 @@ export const loginAdmin = async (req, res) => {
             );
 
             res.cookie("token", token, { httpOnly: true, maxAge: 3600000 });
-            res.status(200).json({ message: "Login successful", token, userData: admin });
+            res.status(200).json({ message: "Login successful", token, userData: admin, role });
         });
     } catch (error) {
         console.log(error);
@@ -73,6 +80,16 @@ export const addAdmin = async (req, res) => {
     try {
         const { name, username, password, phone, email, role } = req.body;
         const hashedPassword = await hashData(password);
+
+        // check if email already exists in Client collection
+        const client = await Client.findOne({ email });
+
+        if (client) {
+            return res.status(400).json({
+                message: "Email already exists in Client collection",
+                success: false,
+            });
+        }
 
         const addedAdmin = await Admin.create({
             name,

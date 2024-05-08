@@ -4,6 +4,21 @@ export const addCartItem = async (req, res) => {
     const {client } = req.body;
     const { product, quantity } = req.body;
     try {
+        const existingCartItem = await Cart.findOne({
+            client: client.id,
+            product,
+        });
+
+        if (existingCartItem) {
+            existingCartItem.quantity += quantity;
+            await existingCartItem.save();
+            return res.status(200).json({
+                message: "Cart item updated successfully",
+                data: existingCartItem,
+                success: true,
+            });
+        }
+
         const newCartItem = await Cart.create({
             client: client.id  ,
             product,
